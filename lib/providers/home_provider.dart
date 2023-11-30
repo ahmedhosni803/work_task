@@ -4,12 +4,32 @@ import 'package:task/service/netowrk/apis/api_manger.dart';
 import '../model/popular_response.dart';
 
 class HomeViewModel extends ChangeNotifier {
-  List<PersonResults> people = [];
+  HomeViewModel() {
+    getMorePopular();
+  }
+
+  List<PersonResults> peoples = [];
   ScrollController scrollController = ScrollController();
   int page = 1;
-  int totalPages = 1;
+  int totalPages = 500;
   bool isEnd = false;
-  HomeViewModel() {
+
+  getPopular(int page) {
+    ApiManger.getPopular(page).then((value) {
+      if (peoples.isEmpty) {
+        peoples = value.personResults ?? [];
+      } else if (totalPages != page) {
+        peoples.addAll(value.personResults ?? []);
+      } else {
+        isEnd = true;
+      }
+      notifyListeners();
+    }).onError((error, stackTrace) {
+      print(error);
+    });
+  }
+
+  getMorePopular() {
     scrollController.addListener(() {
       if (scrollController.position.atEdge) {
         bool isTop = scrollController.position.pixels == 0;
@@ -19,21 +39,10 @@ class HomeViewModel extends ChangeNotifier {
       }
     });
   }
-  getPopular(int page) {
-    ApiManger.getPopular(page).then((value) {
-      if (totalPages == 1) {
-        totalPages = value.totalPages?.toInt() ?? 1;
-      }
-      if (people.isEmpty) {
-        people = value.personResults ?? [];
-      } else if (totalPages != page) {
-        people.addAll(value.personResults ?? []);
-      } else {
-        isEnd = true;
-      }
-      notifyListeners();
-    }).onError((error, stackTrace) {
-      print(error);
-    });
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 }

@@ -27,10 +27,10 @@ class ApiManger {
   }
 
 // get Popular details
-  static Future<PersoneResponse> getPopularDetails(String id) async {
+  static Future<PersonResponse> getPopularDetails(String id) async {
     Response response = await _dio.get(EndPoint.personDetails(id));
     if (response.statusCode == 200) {
-      return PersoneResponse.fromJson(response.data);
+      return PersonResponse.fromJson(response.data);
     } else {
       throw response.statusCode.toString();
     }

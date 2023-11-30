@@ -1,5 +1,5 @@
-class PersoneResponse {
-  PersoneResponse({
+class PersonResponse {
+  PersonResponse({
     this.adult,
     this.alsoKnownAs,
     this.biography,
@@ -16,7 +16,7 @@ class PersoneResponse {
     this.profilePath,
   });
 
-  PersoneResponse.fromJson(dynamic json) {
+  PersonResponse.fromJson(dynamic json) {
     adult = json['adult'];
     alsoKnownAs = json['also_known_as'] != null
         ? json['also_known_as'].cast<String>()
