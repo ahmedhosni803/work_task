@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
-import 'package:task/screens/details_screen/details_screen.dart';
+import 'package:task/constants/constants.dart';
 
-import '../../../constant/constant_api.dart';
-import '../../../model/popular_response.dart';
+import '../../../models/popular_response.dart';
+import '../../popular_details/details_screen.dart';
 
 class PopularItem extends StatelessWidget {
   PersonResults people;
@@ -27,7 +27,7 @@ class PopularItem extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: CachedNetworkImage(
-                    imageUrl: ApiConst.imageUrl + (people.profilePath ?? ""),
+                    imageUrl: Constants.imageUrl + (people.profilePath ?? ""),
                     height: 10.h,
                     width: 20.w,
                     fit: BoxFit.cover,
@@ -54,7 +54,7 @@ class PopularItem extends StatelessWidget {
                   ],
                 ),
                 const Spacer(),
-                Text(people.gender!.toInt() == 2 ? "Male" : "Female",
+                Text(Constants.gender(people.gender!),
                     style: Theme.of(context).textTheme.titleSmall),
               ],
             ),

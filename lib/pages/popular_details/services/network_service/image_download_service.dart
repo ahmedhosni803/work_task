@@ -3,15 +3,15 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:task/constant/constant_api.dart';
+import 'package:task/constants/constants.dart';
 
-class DownloadMange {
+class ImageDownloadService {
   static final Dio _dio = Dio(BaseOptions(
-    baseUrl: ApiConst.imageUrl,
+    baseUrl: Constants.imageUrl,
     validateStatus: (status) => true,
   ));
 
-  static imageDownload(String image) async {
+  static void downloadImage(String image) async {
     PermissionStatus status = await _getPermission();
     if (status.isGranted) {
       if (Platform.isAndroid) {
@@ -31,7 +31,7 @@ class DownloadMange {
     return status;
   }
 
-  static _downloadInAndroid(String image) async {
+  static void _downloadInAndroid(String image) async {
     String directoryPath = '/storage/emulated/0/imageTest';
     Directory directory = Directory(directoryPath);
     if (!directory.existsSync()) {
@@ -44,7 +44,7 @@ class DownloadMange {
     );
   }
 
-  static _downloadInIOS(String image) async {
+  static void _downloadInIOS(String image) async {
     Directory appDocDir = await getApplicationDocumentsDirectory();
     Directory('${appDocDir.path}/imageTest').createSync();
 

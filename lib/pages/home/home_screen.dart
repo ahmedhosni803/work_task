@@ -1,10 +1,11 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:provider/provider.dart';
-import 'package:task/providers/home_provider.dart';
-import 'package:task/screens/home_screen/components/popular_item.dart';
+import 'package:task/models/popular_response.dart';
+import 'package:task/pages/home/home_view_model.dart';
 
-import '../../model/popular_response.dart';
+import 'widgets/popular_item.dart';
 
 class HomeScreen extends StatelessWidget {
   static const String route = "home";
@@ -13,6 +14,16 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<HomeViewModel>(
       builder: (context, value, child) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (value.connectivity == ConnectivityResult.none) {
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text("not connected"),
+              showCloseIcon: true,
+              closeIconColor: Colors.white,
+            ));
+          }
+        });
+
         return Scaffold(
           appBar: AppBar(),
           body: Column(

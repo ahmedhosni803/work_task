@@ -1,15 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:provider/provider.dart';
-import 'package:task/configuration/routes.dart';
-import 'package:task/configuration/theme/theme_data.dart';
-import 'package:task/providers/details_provider.dart';
-import 'package:task/providers/home_provider.dart';
+import 'package:task/pages/home/home_view_model.dart';
+import 'package:task/pages/home/services/local_service/home_local_service.dart';
+import 'package:task/pages/popular_details/popular_details_view_model.dart';
+import 'package:task/utils/route_generator.dart';
+import 'package:task/utils/theme/app_theme.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await HomeLocalService.init();
   runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(create: (_) => HomeViewModel()..getPopular(1)),
-    ChangeNotifierProvider(create: (_) => DetailsViewModel(), lazy: true),
+    ChangeNotifierProvider(
+      create: (context) => HomeViewModel(),
+      lazy: false,
+    ),
+    ChangeNotifierProvider(
+        create: (_) => PopularDetailsViewModel()..checkConnected(),
+        lazy: false),
   ], child: MyApp()));
 }
 
@@ -20,8 +28,9 @@ class MyApp extends StatelessWidget {
       builder: (_, orientation, screenType) {
         return MaterialApp(
           theme: AppTheme.theme,
-          routes: AppRoute.routes,
-          initialRoute: AppRoute.initialRoute,
+          onGenerateRoute: RouteGenerator.generateRoute,
+          // routes: AppRoute.routes,
+          // initialRoute: AppRoute.initialRoute,
         );
       },
     );
