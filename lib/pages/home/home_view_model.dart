@@ -29,24 +29,26 @@ class HomeViewModel extends ChangeNotifier {
           isEnd = false;
           peoples = value.personResults ?? [];
           HomeLocalService.saveData(
-              key: "popular", value: jsonEncode(value), poxName: "popular");
+              key: "popular", value: jsonEncode(peoples), poxName: "popular");
         } else if (totalPages != page) {
           peoples.addAll(value.personResults ?? []);
           HomeLocalService.saveData(
-              key: "popular", value: jsonEncode(value), poxName: "popular");
+              key: "popular", value: jsonEncode(peoples), poxName: "popular");
         } else {
           isEnd = true;
         }
         notifyListeners();
       }).onError((error, stackTrace) {});
     } else {
-      HomeLocalService.getData(key: "popular", poxName: "popular").then(
-        (value) {
-          PopularResponse data = PopularResponse.fromJson(jsonDecode(value));
-          peoples = data.personResults!;
+      HomeLocalService.getData(key: "popular", poxName: "popular")
+          .then((value) {
+        jsonDecode(value).forEach((v) {
+          peoples.add(PersonResults.fromJson(v));
           isEnd = true;
-        },
-      ).onError((error, stackTrace) {});
+        });
+      }).onError((error, stackTrace) {
+        print(error);
+      });
     }
   }
 
@@ -66,7 +68,7 @@ class HomeViewModel extends ChangeNotifier {
         await Connectivity().checkConnectivity();
     Connectivity().onConnectivityChanged.listen((event) {
       connectivityResult = event;
-      connectivity= event;
+      connectivity = event;
       notifyListeners();
     });
     connectivity = connectivityResult;
